@@ -1,5 +1,6 @@
 package kr.co.sangwonjwa.myrestfulservice.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -10,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,7 +24,7 @@ public class User {
 
     @Schema(title = "사용자 ID", description = "사용자 ID는 자동 생성됩니다.")
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Schema(title = "사용자 이름", description = "사용자 이름을 입력합니다")
@@ -38,4 +40,16 @@ public class User {
 
     @Schema(title = "사용자 주민번호", description = "사용자 주민번호를 입력합니다.")
     private String ssn;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts;
+
+    public User(Integer id, String name, Date joinDate, String password, String ssn) {
+        this.id = id;
+        this.name = name;
+        this.joinDate = joinDate;
+        this.password = password;
+        this.ssn = ssn;
+    }
 }
